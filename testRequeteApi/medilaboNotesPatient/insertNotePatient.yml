@@ -1,0 +1,23 @@
+info:
+  name: insertNotePatient
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: http://localhost:9001/patient/note
+  body:
+    type: json
+    data: |-
+      {
+        "patient" : "lkol",
+        "note" : "bla bla bla bla",
+        "patId" : 2
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
