@@ -42,7 +42,7 @@ public class NoteController {
         long nbrNotes = noteRepository.countByPatId(patientId);
         try {
             noteRepository.deleteByPatId(patientId);
-            return ResponseEntity.ok(Map.of("Number of deleted notes", nbrNotes));
+            return ResponseEntity.ok(Map.of("deletedNotes", nbrNotes));
         }catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
