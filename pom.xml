@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.6</version>
+		<version>4.0.8</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.medilabo.notesPatients</groupId>
 	<artifactId>MediLabo.notesPatients</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<name>notesPatients</name>
 	<description>Service note patients NoSQL Medilabo</description>
 	<url/>

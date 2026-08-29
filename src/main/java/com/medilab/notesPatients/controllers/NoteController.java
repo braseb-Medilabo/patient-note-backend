@@ -15,6 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.medilab.notesPatients.model.Note;
 import com.medilab.notesPatients.model.repositorys.NoteRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import jakarta.validation.Valid;
 
 @RestController
@@ -26,25 +33,85 @@ public class NoteController {
     }
     
     @GetMapping("/patient/note/{patientId}")
-    public ResponseEntity<List<Note>> getListOfNotePatient(@PathVariable Integer patientId){
+    @Operation(
+            summary = "Get all notes for a patient",
+            description = "Retrieves all medical notes associated with a patient."
+        )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "List of notes associated with the patient",
+            content = @Content(
+                mediaType = "application/json",
+                array = @ArraySchema(
+                    schema = @Schema(implementation = Note.class)
+                )
+            )
+        )
+    })
+    public ResponseEntity<List<Note>> getListOfNotePatient(
+            @Parameter(
+                    description = "Unique identifier of the patient",
+                    example = "1"
+            )
+            @PathVariable Integer patientId) {
         
         return ResponseEntity.status(HttpStatus.OK)
                             .body(noteRepository.findByPatId(patientId));
     }
     
     @PostMapping("/patient/note")
-    public ResponseEntity<Note> addNotePatient(@Valid @RequestBody Note note){
+    @Operation(
+            summary = "Add a note to a patient",
+            description = "Creates a new medical note associated with a patient."
+        )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "201",
+            description = "Note successfully created",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Note.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid note data"
+        )
+    })
+    public ResponseEntity<Note> addNotePatient(@Valid @RequestBody Note note) {
         return new ResponseEntity<Note>(noteRepository.insert(note), HttpStatus.CREATED);
     }
     
     @DeleteMapping("/patient/note/{patientId}")
+    @Operation(
+            summary = "Delete all notes of a patient",
+            description = "Deletes all medical notes associated with a patient."
+        )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "Notes successfully deleted",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    type = "object",
+                    example = "{\"deletedNotes\": 3}"
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "No notes found for the patient"
+        )
+    })
     public ResponseEntity<?> removeNotesPatient(@PathVariable Integer patientId){
         long nbrNotes = noteRepository.countByPatId(patientId);
-        try {
-            noteRepository.deleteByPatId(patientId);
-            return ResponseEntity.ok(Map.of("deletedNotes", nbrNotes));
-        }catch (Exception e) {
+        if (nbrNotes == 0) {
             return ResponseEntity.notFound().build();
         }
+        noteRepository.deleteByPatId(patientId);
+        return ResponseEntity.ok(Map.of("deletedNotes", nbrNotes));
+       
     }
 }

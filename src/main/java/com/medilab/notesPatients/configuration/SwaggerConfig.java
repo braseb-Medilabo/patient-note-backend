@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
@@ -17,7 +18,10 @@ import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.servers.Server;
 
 @OpenAPIDefinition(info = @Info(title = "Patient notes API",
-version = "1.0"),
+                                version = "1.0",
+                                description = "API for managing medical notes associated with patients.",
+                                contact = @Contact(name = "Medilabo dev",
+                                email = "braseb37@gmail.com")),
 security = @SecurityRequirement(name = "bearerAuth"))
 
 
