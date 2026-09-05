@@ -76,7 +76,19 @@ public class NoteController {
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "Invalid note data"
+            description = "Invalid note data",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(
+                        type = "object",
+                        example = """
+                            {
+                              "message": "validation failed",
+                              "errors": {keys's errors}
+                            }
+                            """
+                    )
+                )
         )
     })
     public ResponseEntity<Note> addNotePatient(@Valid @RequestBody Note note) {
