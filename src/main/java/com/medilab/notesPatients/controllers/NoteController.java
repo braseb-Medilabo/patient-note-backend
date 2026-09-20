@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.medilab.notesPatients.exception.MessageError;
 import com.medilab.notesPatients.model.Note;
 import com.medilab.notesPatients.model.repositorys.NoteRepository;
 
@@ -79,17 +80,9 @@ public class NoteController {
             description = "Invalid note data",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(
-                        type = "object",
-                        example = """
-                            {
-                              "message": "validation failed",
-                              "errors": {keys's errors}
-                            }
-                            """
-                    )
-                )
-        )
+                    schema = @Schema(implementation = MessageError.class)
+            )
+        )  
     })
     public ResponseEntity<Note> addNotePatient(@Valid @RequestBody Note note) {
         return new ResponseEntity<Note>(noteRepository.insert(note), HttpStatus.CREATED);
@@ -114,7 +107,8 @@ public class NoteController {
         ),
         @ApiResponse(
             responseCode = "404",
-            description = "No notes found for the patient"
+            description = "No notes found for the patient",
+            content = @Content()
         )
     })
     public ResponseEntity<?> removeNotesPatient(@PathVariable Integer patientId){
